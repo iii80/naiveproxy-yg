@@ -1,5 +1,5 @@
 #!/bin/bash
-naygV="23.1.19 V 2.1"
+naygV="23.3.17 V 2.2"
 remoteV=`wget -qO- https://gitlab.com/rwkgyg/naiveproxy-yg/raw/main/naiveproxy.sh | sed  -n 2p | cut -d '"' -f 2`
 chmod +x /root/naiveproxy.sh
 red='\033[0;31m'
@@ -585,6 +585,14 @@ yellow "${url}\n"
 green "二维码分享链接如下(SagerNet / Matsuri)" && sleep 2
 qrencode -o - -t ANSIUTF8 "$(cat /root/naive/URL.txt)"
 }
+
+nalog(){
+echo
+red "退出 Naiveproxy 日志查看，请按 Ctrl+c"
+echo
+journalctl -u caddy --output cat -f
+}
+
 start_menu(){
 naiveproxystatus
 clear
@@ -613,6 +621,7 @@ green "  7. 显示当前naiveproxy分享链接、V2rayN配置文件、二维码"
 green "  8. ACME证书管理菜单"
 green "  9. 安装WARP（可选）"
 green " 10. 安装BBR+FQ加速（可选）"
+green " 11. 查看naiveproxy运行日志"
 green "  0. 退出脚本"
 red "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 if [[ -n $(systemctl status caddy 2>/dev/null | grep -w active) && -f '/etc/caddy/Caddyfile' ]]; then
@@ -646,6 +655,7 @@ case "$Input" in
  8 ) acme;;
  9 ) cfwarp;;
  10 ) bbr;;
+ 11 ) nalog;;
  * ) exit 
 esac
 }
